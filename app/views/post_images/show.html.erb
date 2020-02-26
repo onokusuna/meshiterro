@@ -1,0 +1,113 @@
+<section class="sct-color-1 slice">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 post_images_container">
+        <div class="post-item">
+
+         <div class="post-meta-top">
+           <div class="post-image">
+             <%= attachment_image_tag @post_image, :image %>
+           </div>
+         </div>
+        <div class="post-content">
+            <h2 class="post-title"><%= @post_image.shop_name %></h2>
+            <ul class="meta-info-cells v4 float-wrapper">
+              <li>
+                 <i class="fa fa-user"></i>By<a href="#">
+                 <%= @post_image.user.name %></a>
+              </li>
+              <li>
+                <!-- '%Y/%m/%d'の記述で、年/月/日のフォーマットへ変換します。 -->
+                <!-- %Y、%m、%dは、日時のフォーマット指定によく使われます。覚えておきましょう。 -->
+                <i class="fa fa-calendar"></i><%= @post_image.created_at.strftime('%Y/%m/%d') %>
+              </li>
+              <!-- favorited -->
+              <!-- 投稿画像に付けられた「いいね」に、自分（ログインしているユーザ）が含まれているかをfavorited_by?メソッドで判定しています。 -->
+              <% if @post_image.favorited_by?(current_user) %>
+                <li>
+                  <%= link_to post_image_favorites_path(@post_image), method: :delete do %>
+                    <i class="fa fa-heart" aria-hidden="true" style="color: red;"></i>
+                    <%= @post_image.favorites.count %> いいね
+                  <% end %>
+                </li>
+              <% else %>
+                <li>
+                  <%= link_to post_image_favorites_path(@post_image), method: :post do %>
+                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                    <%= @post_image.favorites.count %> いいね
+                  <% end %>
+                </li>
+              <% end %>
+              <li>
+                <!-- 投稿画像へのコメント -->
+                <i class="fa fa-comment"></i>
+                <a href="#comments"><%= @post_image.post_comments.count %></a>
+              </li>
+              <!-- 削除ボタン設置 -->
+              <li>
+                <!-- もし、投稿者 == 現在ログインしているユーザだったら 削除ボタン 終わり -->
+                <% if @post_image.user == current_user %>
+                  <%= link_to "削除", post_image_path(@post_image), method: :delete %>
+                <% end %>
+              </li>
+            </ul>
+            <div class="post-content-inner mt-20">
+                <p><%= @post_image.caption %></p>
+            </div>
+        </div>
+          <!-- コメント数も表示 -->
+          <div class="comment-list bt style-2" id="comments">
+            <div class="float-wrapper">
+              <h2 class="comment-count"><%= @post_image.post_comments.count %>件コメント</h2>
+            </div>
+            <ol>
+              <!-- コメント本文の表示を変更する -->
+              <% @post_image.post_comments.each do |post_comment| %>
+                <li class="comment">
+                    <div class="comment-body bb">
+                        <div class="comment-avatar">
+                            <div class="avatar">
+                                <!-- プロフィール画像を反映させる -->
+                                <%= attachment_image_tag post_comment.user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg" %>
+                            </div>
+                        </div>
+                        <div class="comment-text">
+                            <div class="comment-author clearfix">
+                                <a href="#" class="link-author"><%= post_comment.user.name %></a>
+                                <span class="comment-meta">
+                                  <span class="comment-date"><%= post_comment.created_at.strftime('%Y/%m/%d') %></span>
+                                </span>
+                            </div>
+                            <div class="comment-entry"><%= post_comment.comment %></div>
+                        </div>
+                    </div>
+                </li>
+            <% end %>
+            </ol>
+          </div>
+          <hr>
+
+          <!-- Add comment section -->
+          <div class="section-title-wrapper style-1 v1 mt-30" id="divAddComment">
+            <h3 class="section-title left">
+              <span>コメント</span>
+            </h3>
+          </div>
+            <!-- コメント入力フォームを記述する -->
+            <!-- form_forに対して、[@post_image,@post_comment]のように、配列でインスタンス変数を2つ指定している点に注意してください。 -->
+            <!-- コメントは、post_imageに結びついたpost_commentにあるため、2つ用意する必要があります。 -->
+            <!-- また、post_commentをcreateするためのリクエストは、ルーティングもネスト（親子関係）しているため、上記2つの情報が必要になります。 -->
+            <%= form_for [@post_image, @post_comment] do |f| %>
+              <div class="row">
+                  <div class="col-sm-12">
+                      <%= f.text_area :comment, rows:'5', class: "form-control",placeholder: "コメントをここに" %>
+                  </div>
+              </div>
+              <%= f.submit "送信する", class: "btn btn-lg btn-base-1 mt-20 pull-right" %>
+            <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

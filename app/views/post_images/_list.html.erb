@@ -1,0 +1,59 @@
+<!-- 部分テンプレートファイル -->
+
+<section class="sct-color-1 slice">
+  <div class="container-fluid masonry-container">
+    <div class="row">
+      <div class="col-md-8 col-sm-offset-2">
+        <div class="masonry-wrapper-cols">
+
+          <div class="masonry-gutter"></div>
+
+          <!-- （showの場合は）コントローラから渡されたpost_images変数内から1つずつ取り出して、post_image変数へ格納します。 -->
+            <!-- 部分テンプレート用にコードを変更する。 -->
+            <!-- 部分テンプレートファイル内でインスタンス変数を利用すると、同じ名前の「アクション」からしか呼び出せなくなってしまいます。これでは、再利用しにくいテンプレートになってしまいますね。 -->
+            <!-- 部分テンプレートが呼び出されたときに、Viewから渡される変数が使えるように変更します。この変数には、ローカル変数を使います。 -->
+            <% post_images.each do |post_image| %>
+            <div class="masonry-block">
+              <div class="block block-image v1">
+                <div class="block-image">
+                  <div class="view view-first">
+                    <!-- attachment_image_tagは、refile側が用意したヘルパーで、<img>タグを作成してくれます。 -->
+                    <!-- post_image変数のimage_idに保存された画像の<img>タグを生成します。 -->
+                    <%= link_to post_image_path(post_image.id) do %>
+                    <!-- post_image変数のshop_nameカラムを表示します。 -->
+                    <!-- このカラムは、post_imageモデルに定義されています。 -->
+                      <%= attachment_image_tag post_image, :image %>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="block-content">
+                  <!-- 投稿に表示されるユーザ画像も、プロフィール画像に変更します。 -->
+                  <%= attachment_image_tag post_image.user, :profile_image, :fill, 60, 60, fallback: "no_image.jpg", class: "img-circle pull-left profile-thumb" %>
+                  <h3 class="block-title">
+                    <%= link_to post_image_path(post_image.id) do %>
+                      <i class="fa fa-map-marker"></i><%= post_image.shop_name %>
+                    <% end %>
+                  </h3>
+                  <!-- post_image変数のcaptionカラムを表示します。 -->
+                  <!-- このカラムも、post_imageモデルに定義されています。 -->
+                  <p><%= post_image.caption %></p>
+                  <!-- コメント件数の表示を記述する -->
+                  <ul class="inline-meta">
+                    <li>By
+                      <%= post_image.user.name %>
+                    </li>
+                    <li>
+                      <%= link_to "#{post_image.post_comments.count} コメント", post_image_path(post_image.id) %>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <% end %>
+            <%= paginate post_images, class: "pagenate" %><!-- @post_images → post_images -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

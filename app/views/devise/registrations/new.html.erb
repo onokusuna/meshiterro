@@ -1,0 +1,57 @@
+<!-- registration=記載、登録 -->
+<section class="slice slice-lg sct-color-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+
+                <div class="form-user style-1 rounded has-shadow-1">
+                    <div class="form-header text-center">
+                        <h2 class="form-header-title">ユーザー登録</h2>
+                    </div>
+                    <div class="form-body">
+                    <!-- 書換："form-body"を今回のものに書き換え -->
+                    <!-- form_forで利用するモデルを取得し、モデル名としてresource_nameを使用できるようにしています。 -->
+                      <!-- 今回は、rails g devise Userで作成したUserを取得しています。 -->
+                    <!-- urlは、form_forのオプションです。%= form.submit %をクリックしたときのアクションを設定できます。 -->
+                      <!-- 今回は、registration_pathへUserモデルを渡す記述をしています（registration_pathはdeviseの新規登録を行うコントローラ） -->
+                    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+                            <!-- error_messagesファイルをrenderメソッドで呼び出し？ resource:はdeviseの独自の記述方法-->
+                            <%= render "devise/shared/error_messages", resource: resource %><!-- render=与える -->
+                        <!-- class属性やid属性などは、CSSを用いているだけですので、各自で読み解いてみましょう。 -->
+                        <div class="form-group has-icon">
+                            <!-- label for はフォームの中でフォームの項目名と構成部品（チェックボックス、ラジオボタンなど）を関連付けるためのタグ -->
+                            <!-- for で部品にidを付与 -->
+                            <label class="control-label sr-only" for="inputName">Name</label>
+                        <!-- f.……は、フォームのタイプを表します。また、その後に続くものはUserモデルのプロパティ名です。 -->
+                            <%= f.text_field :name, autofocus: true, class:"form-control", id:"inputName", placeholder:"名前"%>
+                            <!-- fa=FontAwesome aria-hidden=ユーザーエージェントに認識させたくない要素に指定するためのWAI-ARIA属性-->
+                            <!-- つまりiconを表示させない？ -->
+                            <span class="fa fa-user form-control-icon" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="form-group has-icon">
+                            <label class="control-label sr-only" for="inputEmail">Email</label>
+                            <%= f.email_field :email, class:"form-control", id:"inputEmail", placeholder:"メールアドレス"%>
+                            <span class="fa fa-envelope form-control-icon" aria-hidden="true"></span>
+                        </div>
+                        <div class="form-group has-icon">
+                            <label class="control-label sr-only" for="inputPassword">Password</label>
+                            <%= f.password_field :password, autocomplete: "off", class:"form-control", id:"inputPassword", placeholder:"パスワード" %>
+                            <span class="fa fa-lock form-control-icon" aria-hidden="true"></span>
+                        </div>
+                        <div class="form-group has-icon">
+                            <label class="control-label sr-only" for="inputConfirmPassword">Password</label>
+                            <%= f.password_field :password_confirmation, autocomplete: "off", class:"form-control", id:"inputConfirmPassword", placeholder:"パスワード確認" %>
+                             <span class="fa fa-check-circle-o form-control-icon" aria-hidden="true"></span>
+                        </div>
+                            <!-- %= f.submit '表示文', class:(class名) %  -->
+                            <%= f.submit "新規登録", class:"btn btn-lg btn-block btn-base-1 mt-20" %>
+
+                        <% end %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

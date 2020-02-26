@@ -1,0 +1,11 @@
+<!-- usersのshow（マイページ画面） -->
+<!-- 最後に、ユーザのプロフィールを、ページ上部に記述します。これでマイページのがわ完成です。 -->
+<div class="profile-container">
+    <h3 class="profile-name"><%= @user.name %></h3>
+    <!-- 3行目の記述をattachment_image_tag……に変更し、プロフィール画像が表示できるようにしています(refile) -->
+    <%= attachment_image_tag @user, :profile_image, :fill, 100, 100, format: 'jpeg', class: "img-circle pull-left profile-img", fallback: "no_image.jpg" %>
+    <% if @user.id == current_user.id %>
+        <p><%= link_to "プロフィール編集", edit_user_path(@user), class: "pull-right" %></p>
+    <% end %>
+</div>
+<%= render 'post_images/list', post_images: @post_images %>
