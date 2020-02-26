@@ -70,3 +70,9 @@ gem "refile-mini_magick"
 
 # paging
 gem 'kaminari','~> 1.1.1'
+
+# mysql
+gem 'dotenv-rails'
+group :production do
+  gem 'mysql2'
+end
